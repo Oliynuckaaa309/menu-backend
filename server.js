@@ -16,9 +16,13 @@ app.use(cors(corsOptions));
 const categoriesRoute = require('./routes/categoryRoutes');
 const productsRoute = require('./routes/productRoutes');
 const usersRoute = require('./routes/userRoutes');
+const {join} = require("node:path");
 app.use('/categories', categoriesRoute);
 app.use('/products', productsRoute);
 app.use('/users', usersRoute);
+app.use('/image', express.static(__dirname + '/image'));
+
+
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
