@@ -18,14 +18,12 @@ const categoriesRoute = require('./routes/categoryRoutes');
 const productsRoute = require('./routes/productRoutes');
 const usersRoute = require('./routes/userRoutes');
 const authRoute = require('./routes/authRoutes');
-const {join} = require("node:path");
 app.use(express.json());
 app.use('/categories', categoriesRoute);
 app.use('/products', productsRoute);
 app.use('/users', usersRoute);
 app.use('/login', authRoute);
 app.use('/image', express.static(__dirname + '/image'));
-
 
 
 const port = process.env.PORT || 8080;
