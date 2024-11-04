@@ -1,9 +1,9 @@
-const configuration = require("../database");
+const configuration = require('../database');
 
 exports.getProducts = async (req, res) => {
     try {
         let result;
-        if (req.query.categoryname) {
+        if (req.query.categoryName) {
             result = await configuration.query('SELECT products.* FROM products ' +
                 'JOIN categories on products.category_id=categories.id ' +
                 `WHERE categories.name = '${req.query.categoryName}'`);

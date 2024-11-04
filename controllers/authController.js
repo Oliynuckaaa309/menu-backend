@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const configuration = require("../database");
-const bcrypt = require("bcryptjs");
+const configuration = require('../database');
+const bcrypt = require('bcryptjs');
 
 exports.loginUser = async function (req, res) {
     const {email, password} = req.body;
@@ -24,6 +24,6 @@ exports.loginUser = async function (req, res) {
         res.json({message: 'User logged in successfully', token, user});
     } catch (error) {
         console.log(error);
-        res.status(5000).send('Server Error');
+        res.status(500).send('Server Error');
     }
 }
