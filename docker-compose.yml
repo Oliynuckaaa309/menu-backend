@@ -1,0 +1,52 @@
+networks:
+  privnet:
+
+services:
+
+  server:
+    image: node-docker:latest
+    container_name: server-c
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file: .env
+    command: bash -c "npm run migrate up && node server.js"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/server
+      - server-v-node-modules:/server/node_modules
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - privnet
+
+  database:
+    image: postgres:latest
+    container_name: postgres-c
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+     - POSTGRES_PASSWORD=12345
+    ports:
+      - "5433:5433"
+    volumes:
+      - database-v:/var/lib/postgresql/data
+    command: "-p 5433"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -p 5433 -U postgres -d postgres"]
+      start_period: 0s
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - privnet
+
+volumes:
+  server-v-node-modules:
+    name: "server-v-node-modules"
+  database-v:
+    name: "database-v"
