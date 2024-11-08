@@ -4,4 +4,5 @@ module.exports = {
     joinRoom:'joinRoom',
     sendMessage:'SendMessage',
     receiveMessage:'ReceiveMessage',
+    watchedMessage:'WatchedMessage',
 }

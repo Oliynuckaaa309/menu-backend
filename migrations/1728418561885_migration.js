@@ -66,6 +66,7 @@ exports.up = (pgm) => {
             notNull: true,
             default: pgm.func('current_timestamp'),
         },
+        read_by_support: {type: 'boolean', notNull: true, default: false},
     });
     pgm.createIndex('products', 'category_id');
     pgm.createIndex('messages', 'sender_id');

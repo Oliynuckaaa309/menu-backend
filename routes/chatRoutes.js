@@ -1,5 +1,5 @@
 const express = require('express');
-const { getSenders, getPreviousMessages } = require('../controllers/chatController');
+const { getSenders, getPreviousMessages} = require('../controllers/chatController');
 const router = express.Router();
 
 router.get('/user/:id', getPreviousMessages);

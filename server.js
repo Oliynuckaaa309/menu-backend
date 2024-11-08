@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors'); // Import the cors package
+const cors = require('cors');
 const app = express();
 const socket= require('socket.io');
 const connection= require('./connection');
@@ -22,6 +22,7 @@ const productsRoute = require('./routes/productRoutes');
 const usersRoute = require('./routes/userRoutes');
 const authRoute = require('./routes/authRoutes');
 const chatRoute = require('./routes/chatRoutes');
+const { markMessageAsRead} = require("./controllers/chatController");
 
 app.use(express.json());
 app.use('/categories', categoriesRoute);
@@ -52,11 +53,9 @@ socketIo.on('connection', socket => {
     socket.on(connection.create, (newData) => {
         socketIo.emit(connection.create, newData);
     });
-    socket.on(connection.joinRoom, ({senderId}) => {
-        const roomId = `${senderId}`;
-        socket.join(roomId);
+    socket.on(connection.joinRoom, ({roomId}) => {
+        socket.join(roomId.toString());
         console.log(`User ${socket.id} joined room: ${roomId}`);
-
     });
 
     socket.on(connection.sendMessage, async (data) => {
@@ -69,9 +68,19 @@ socketIo.on('connection', socket => {
             const savedMessage = result.rows[0];
             console.log("Sending message to room:", roomId, savedMessage);
             socketIo.to([roomId]).emit('receiveMessage', savedMessage);
+            console.log("senderId" + senderId)
+            if(senderId !== 3) {
+                socketIo.to(["3"]).emit('receiveMessage', {id: 1, sender_id: 0, recipient_id: 3, message: senderId.toString()} );
+                console.log("sent message to support")
+            }
         } catch (err) {
             console.error(err);
         }
+    });
+    socket.on(connection.watchedMessage, async ({id}) => {
+        markMessageAsRead(id).then(() => {
+            console.log(`Message with id ${id} marked as read.`);
+        });
     });
 
     socket.on('disconnect', () => {
